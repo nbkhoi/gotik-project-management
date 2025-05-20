@@ -1,0 +1,290 @@
+<context>
+# Overview  
+The API Gateway is a critical component of the Gotik platform, serving as the single entry point for all client requests. While the current implementation provides basic routing, load balancing, and integration with authentication services, several enhancements are needed to fully meet the requirements specified in the system PRD, particularly in the areas of authorization, performance monitoring, and resilience under high load.
+
+# Core Features  
+1. **API Gateway Routing and Load Balancing**
+   - Routes client requests to appropriate microservices
+   - Implements client-side load balancing for distributed services
+   - Provides a unified access point for frontend applications
+
+2. **Security and Access Control**
+   - Integrates with authentication services (AWS Cognito)
+   - Enforces authorization policies based on user roles
+   - Implements rate limiting to prevent abuse
+
+3. **Request Processing**
+   - Handles request and response transformation
+   - Provides logging and monitoring
+   - Supports cross-cutting concerns like CORS and header enrichment
+
+# User Experience  
+## User Personas
+
+1. **Application Developers**
+   - Need a reliable API gateway to route requests to appropriate services
+   - Require clear documentation on routing rules and security policies
+   - Depend on gateway stability for application functionality
+
+2. **System Administrators**
+   - Monitor gateway performance and health
+   - Configure routing rules and security policies
+   - Respond to incidents and performance issues
+
+3. **End Users** 
+   - Experience consistent authentication across all services
+   - Receive appropriate authorization for their role
+   - Benefit from reliable system performance even during high traffic periods
+
+## Key User Flows
+
+1. **Authentication Flow**
+   - User provides credentials to the gateway
+   - Gateway validates with the authentication service
+   - User receives a token for subsequent requests
+
+2. **Service Request Flow**
+   - User sends authenticated request to the gateway
+   - Gateway validates the token and checks authorization
+   - Request is routed to the appropriate service, and response is returned
+
+3. **Error Handling Flow**
+   - When errors occur, appropriate status codes and messages are returned
+   - System gracefully degrades under extreme load
+   - Rate limiting is applied when necessary to maintain system stability
+
+## UI/UX Considerations
+- Clear error messages for developers and end users
+- Consistent response formatting across all services
+- Minimal latency for optimal user experience
+</context>
+
+<PRD>
+# Technical Architecture  
+## System Components Enhancement
+1. **Authorization System**
+   - Implement a fully-functional role-based access control system
+   - Complete the current (commented-out) AuthorizationGatewayFilter implementation
+   - Create role-based route configurations for all microservices
+   
+2. **Performance Monitoring System**
+   - Implement request timing metrics collection
+   - Add distributed tracing with Sleuth and Zipkin
+   - Create performance dashboards using Micrometer and Prometheus
+   
+3. **Resilience Enhancement**
+   - Implement circuit breaker patterns for service calls
+   - Add request timeout configurations
+   - Create fallback mechanisms for degraded service scenarios
+
+4. **API Documentation Enhancement**
+   - Add comprehensive API documentation
+   - Implement a versioning strategy for APIs
+   - Provide developer sandbox environments
+
+## Data Models
+1. **Gateway Metrics Model**
+   - Request latency metrics
+   - Error rate data
+   - Service availability information
+
+2. **Authorization Model Enhancement**
+   - Role definitions (ADMIN, OPERATOR, USER)
+   - Permission sets for each role
+   - Resource-to-permission mappings
+
+3. **Rate Limiting Configuration Model**
+   - Service-specific rate limits
+   - User/client-specific rate limits
+   - Graduated response for rate limit violations
+
+## APIs and Integrations
+1. **Enhanced Internal APIs**
+   - Add consistent health check endpoints
+   - Implement API versioning headers
+   - Add request ID propagation
+
+2. **Monitoring Integration**
+   - Connect to centralized monitoring system
+   - Expose JMX endpoints for metrics collection
+   - Integrate with log aggregation system
+
+3. **Security Integrations**
+   - Complete AWS Cognito integration for all user types
+   - Add OAuth2 resource server capabilities
+   - Implement audit logging for security events
+
+## Infrastructure Requirements
+1. **Caching Layer**
+   - Add Redis for token and authorization caching
+   - Implement response caching where appropriate
+   - Configure cache invalidation strategies
+
+2. **Scaling Configuration**
+   - Configure auto-scaling based on request load
+   - Implement sticky sessions for stateful interactions
+   - Balance resources between API Gateway instances
+
+3. **Security Hardening**
+   - Add WAF integration for common attack prevention
+   - Implement TLS configuration with modern ciphers
+   - Add IP allowlisting capabilities for admin functions
+
+# Development Roadmap  
+## Phase 1: Core Security Enhancements
+1. **Complete Authorization Implementation**
+   - Uncomment and fix the existing AuthorizationGatewayFilter
+   - Test role-based access control for all routes
+   - Implement JWT claim validation for roles
+
+2. **Security Hardening**
+   - Ensure all routes are properly secured
+   - Audit and update CORS configuration
+   - Enable and test rate limiting for all endpoints
+
+3. **Authentication Refinement**
+   - Complete Cognito integration testing
+   - Implement token refresh handling
+   - Add multi-factor authentication support
+
+## Phase 2: Operational Excellence
+1. **Performance Monitoring**
+   - Add request timing metrics
+   - Implement distributed tracing
+   - Create performance dashboards and alerts
+
+2. **Resilience Patterns**
+   - Implement circuit breakers for service calls
+   - Add request timeouts and retries
+   - Create fallback responses for degraded services
+
+3. **Caching Strategy**
+   - Implement token caching
+   - Add response caching for appropriate endpoints
+   - Configure cache invalidation triggers
+
+## Phase 3: Scalability and Advanced Features
+1. **Auto-scaling Configuration**
+   - Configure scaling based on request metrics
+   - Test performance under simulated load
+   - Optimize resource usage
+
+2. **Advanced Security Features**
+   - Add IP-based access controls for sensitive operations
+   - Implement comprehensive audit logging
+   - Add anomaly detection for suspicious activities
+
+3. **Developer Experience Improvements**
+   - Enhance API documentation
+   - Create developer sandbox environments
+   - Provide SDK examples for common operations
+
+# Logical Dependency Chain
+## Foundation Layer
+1. **Authorization System Completion**
+   - Fix and test AuthorizationGatewayFilter
+   - Configure role-based routing
+   - Integrate with existing authentication
+
+2. **Operational Visibility**
+   - Implement basic request logging
+   - Add health check endpoints
+   - Configure basic monitoring alerts
+
+3. **Resilience Foundations**
+   - Add timeout configurations
+   - Implement basic circuit breaker patterns
+   - Create fallback responses for critical services
+
+## Operational Excellence Layer
+1. **Enhanced Monitoring**
+   - Add distributed tracing
+   - Implement detailed performance metrics
+   - Create operational dashboards
+
+2. **Caching Implementation**
+   - Deploy and configure cache service
+   - Implement token caching
+   - Add response caching for appropriate routes
+
+3. **Load Testing and Optimization**
+   - Conduct load testing scenarios
+   - Optimize configurations based on results
+   - Document performance characteristics
+
+## Advanced Capabilities
+1. **Auto-scaling Configuration**
+   - Configure and test auto-scaling
+   - Optimize resource allocation
+   - Document scaling procedures
+
+2. **Advanced Security**
+   - Implement comprehensive audit logging
+   - Add anomaly detection
+   - Configure additional security controls
+
+3. **Developer Experience**
+   - Enhance API documentation
+   - Create SDK examples
+   - Provide developer environments
+
+# Risks and Mitigations  
+## Technical Challenges
+1. **Performance Impact**
+   - **Risk**: Added security checks and monitoring could impact gateway performance
+   - **Mitigation**: Optimize critical path code, implement caching, conduct performance testing at each stage
+
+2. **Service Compatibility**
+   - **Risk**: Enhanced gateway features might not be compatible with all services
+   - **Mitigation**: Create compatibility test suite, implement feature flags, provide migration period
+
+3. **Complex Authorization Logic**
+   - **Risk**: Role-based authorization might become complex and hard to maintain
+   - **Mitigation**: Create clear authorization documentation, implement automated tests, use policy-based approach
+
+## Implementation Risks
+1. **Breaking Changes**
+   - **Risk**: Gateway enhancements might cause breaking changes for clients
+   - **Mitigation**: Version APIs properly, provide deprecation periods, maintain backward compatibility
+
+2. **Security Vulnerabilities**
+   - **Risk**: Incomplete security implementation could leave vulnerabilities
+   - **Mitigation**: Conduct security audits, implement comprehensive testing, follow security best practices
+
+3. **Operational Complexity**
+   - **Risk**: Advanced features increase operational complexity
+   - **Mitigation**: Create comprehensive documentation, implement automation, provide clear operational procedures
+
+# Appendix  
+## Performance Targets
+1. **Latency Budget**
+   - API Gateway processing overhead: <20ms (95th percentile)
+   - End-to-end request handling: <200ms (95th percentile)
+   - Token validation: <10ms with caching
+
+2. **Throughput Requirements**
+   - Support 2000+ concurrent requests
+   - Handle 200+ requests per second sustainably
+   - Support burst traffic of 1000+ requests per second
+
+3. **Resilience Metrics**
+   - 99.99% availability for the gateway itself
+   - Graceful degradation under extreme load
+   - Self-healing capabilities for common failure scenarios
+
+## Security Considerations
+1. **Authorization Implementation**
+   - Follow principle of least privilege
+   - Implement resource-based access control
+   - Support dynamic policy updates
+
+2. **Rate Limiting Strategy**
+   - Graduated response to rate limit violations
+   - Different limits for authenticated vs. unauthenticated users
+   - Service-specific limits for critical operations
+
+3. **Monitoring and Alerting**
+   - Alert on security violations and anomalies
+   - Track authorization failures and patterns
+   - Monitor for potential abuse patterns
+</PRD>

@@ -1,0 +1,399 @@
+<context>
+# Overview  
+Gotik is a comprehensive event management and ticketing platform designed to serve event organizers, venue operators, and attendees. The platform enables seamless event creation, ticket sales, attendee management, and event check-in processes. Gotik aims to provide a reliable, scalable, and user-friendly solution for the entire event lifecycle, from planning through execution to post-event analysis.
+
+# Core Features  
+1. **Event Management**
+   - Create and manage single events or event chains (series of related events)
+   - Configure event details including descriptions, venues, timing, and seat allocation
+   - Support for different event types (concerts, conferences, workshops, etc.)
+
+2. **Ticketing System**
+   - Create multiple ticket classes with different pricing tiers
+   - Generate QR codes for secure ticket validation
+   - Support for seat selection and reservation
+   - Ticket management (purchase, refund, transfer)
+
+3. **User Management**
+   - User registration and authentication with multiple roles (Admin, Operator, User)
+   - User profile management
+   - Role-based access control system
+
+4. **Payment Processing**
+   - Secure payment gateway integration
+   - Support for various payment methods
+   - Order management and payment history
+
+5. **Check-in System**
+   - Mobile-friendly QR code scanning for venue entry
+   - Real-time validation of tickets
+   - Attendance tracking and reporting
+
+6. **Notification System**
+   - Email notifications for ticket purchases, event updates, and reminders
+   - Push notifications for mobile app users
+   - Customizable notification templates
+
+# User Experience  
+## User Personas
+
+1. **Event Organizer (Admin)**
+   - Creates and manages events
+   - Sets up ticket classes and pricing
+   - Manages venue configurations
+   - Accesses reports and analytics
+
+2. **Venue Staff (Operator)**
+   - Manages check-in process at the venue
+   - Scans and validates tickets
+   - Handles on-site issues and queries
+
+3. **Attendee (User)**
+   - Browses and searches for events
+   - Purchases tickets
+   - Manages personal profile
+   - Receives event-related notifications
+
+## Key User Flows
+
+1. **Event Creation Flow**
+   - Admin creates an event or event chain
+   - Configures event details, venue, and timing
+   - Sets up ticket classes with pricing
+   - Publishes the event for users to view and purchase tickets
+
+2. **Ticket Purchase Flow**
+   - User browses and selects an event
+   - Chooses ticket class and quantity
+   - Selects seats (if applicable)
+   - Completes payment
+   - Receives tickets and confirmation
+
+3. **Check-in Flow**
+   - Attendee arrives at venue with ticket (physical or digital)
+   - Operator scans QR code
+   - System validates ticket authenticity and status
+   - Attendee is granted entry
+   - Attendance is recorded in the system
+
+## UI/UX Considerations
+- Clean, intuitive interfaces for all user roles
+- Mobile-responsive design for access across devices
+- Real-time feedback for actions (confirmations, errors)
+- Streamlined checkout process to maximize conversion
+- Interactive seating charts for seat selection
+</context>
+
+<PRD>
+# Technical Architecture  
+## System Components
+Gotik is built on a microservices architecture consisting of the following services:
+
+1. **API Gateway**
+   - Entry point for all client requests
+   - Handles routing, load balancing, and request filtering
+   - Integrates with authentication and authorization
+   
+2. **User Service**
+   - Manages user profiles, authentication, and authorization
+   - Handles user registration, login, and profile management
+   - Integrates with AWS Cognito for identity management
+   
+3. **Event Service**
+   - Manages event creation and retrieval
+   - Handles event chains (series of events)
+   - Stores event metadata, descriptions, and venue information
+   
+4. **Ticket Service**
+   - Manages ticket creation, reservation, and allocation
+   - Handles ticket classes, pricing, and seat assignments
+   - Provides ticket validation and status checking
+   
+5. **Payment Service**
+   - Processes payments and handles financial transactions
+   - Integrates with external payment gateways
+   - Manages payment status and history
+   
+6. **Notification Service**
+   - Sends emails, SMS, and push notifications
+   - Handles notification templates and delivery
+   
+7. **Check-in Service**
+   - Manages the venue entry process
+   - Handles ticket validation and attendance tracking
+
+8. **Eureka Server**
+   - Service discovery for microservices
+   - Enables dynamic service registration and discovery
+
+## Data Models
+Core entity models include:
+
+1. **User Profile**
+   - Basic details (name, email, phone)
+   - Authentication info (linked to Cognito)
+   - Preferences and settings
+
+2. **Event**
+   - Basic info (name, description, times, location)
+   - Related EventChain (if part of a series)
+   - Metadata and organizational details
+
+3. **Ticket**
+   - Associated event and user
+   - Ticket class information
+   - Status (pending, purchased, used, refunded)
+   - QR code/reference data
+
+4. **Seat**
+   - Location information
+   - Status (available, reserved, sold)
+   - Associated ticket and event
+
+5. **Order**
+   - Payment information
+   - Items (tickets purchased)
+   - Status and history
+
+## APIs and Integrations
+1. **Internal APIs**
+   - RESTful service-to-service communication
+   - Spring Cloud OpenFeign for service clients
+
+2. **External Integrations**
+   - AWS Cognito for authentication
+   - Payment gateway providers
+   - Email/SMS delivery services
+   
+3. **Event-Driven Communication**
+   - Kafka for asynchronous event processing
+   - Event-based notifications and updates
+
+## Infrastructure Requirements
+1. **Containerization**
+   - Docker for service packaging
+   - Container orchestration for production environment
+
+2. **Data Storage**
+   - PostgreSQL for relational data (users, events, tickets)
+   - Caching layer for performance optimization
+
+3. **Cloud Services**
+   - AWS for hosting and infrastructure
+   - S3 for image and asset storage
+   - CloudFront or similar CDN for content delivery
+
+4. **Security Infrastructure**
+   - API Gateway for access control
+   - JWT-based authentication
+   - Role-based authorization system
+
+# Development Roadmap  
+## Phase 1: Foundation (MVP)
+1. **Core Authentication and User Management**
+   - Basic user registration and login
+   - User profile management
+   - Role-based access control
+
+2. **Basic Event Management**
+   - Create and edit single events
+   - Simple event listing and details pages
+   - Basic event search functionality
+
+3. **Simple Ticketing System**
+   - Create basic ticket classes
+   - Simple ticket purchasing flow
+   - QR code generation for tickets
+
+4. **Minimal Check-in System**
+   - QR code scanning and validation
+   - Basic attendance tracking
+
+## Phase 2: Enhanced Functionality
+1. **Advanced Event Management**
+   - Event chains and series support
+   - Rich event descriptions and media
+   - Event categories and tags
+
+2. **Enhanced Ticketing**
+   - Multiple ticket tiers and pricing
+   - Seat selection capabilities
+   - Ticket transfers and refunds
+
+3. **Payment System Extensions**
+   - Multiple payment method support
+   - Order history and receipts
+   - Payment analytics
+
+4. **Notification System**
+   - Email notifications for key actions
+   - Customizable notification templates
+   - Notification preferences
+
+## Phase 3: Scale and Advanced Features
+1. **Advanced Analytics and Reporting**
+   - Event performance metrics
+   - Attendance reports and insights
+   - Sales and revenue analytics
+
+2. **Advanced User Features**
+   - Social login integration
+   - User preferences and recommendations
+   - User activity history
+
+3. **Enterprise Features**
+   - Multi-tenant architecture for organizations
+   - Bulk operations for large events
+   - Advanced access control and permissions
+
+4. **Platform Integration**
+   - API for third-party integrations
+   - Webhooks for external systems
+   - Partner integrations (hotels, transportation)
+
+# Logical Dependency Chain
+## Foundation Layer
+1. **Infrastructure Setup**
+   - Microservice architecture setup
+   - API Gateway and service discovery
+   - Basic security infrastructure
+
+2. **Core Authentication System**
+   - User registration and authentication
+   - AWS Cognito integration
+   - Auth token management
+
+3. **Basic Data Models**
+   - User profiles
+   - Events and ticket classes
+   - Orders and payments
+
+## Essential Services
+1. **User Service**
+   - Profile management
+   - Role and permission management
+
+2. **Event Service**
+   - Event CRUD operations
+   - Event data storage and retrieval
+
+3. **Ticket Service**
+   - Ticket generation
+   - Basic reservation system
+
+4. **Payment Service**
+   - Payment processing
+   - Order management
+
+## User-Facing Features
+1. **Event Browsing & Discovery**
+   - Event listing pages
+   - Search and filtering
+
+2. **Ticket Purchase Flow**
+   - Seat selection
+   - Checkout process
+
+3. **User Dashboard**
+   - Ticket management
+   - Order history
+
+4. **Admin Panel**
+   - Event management
+   - User management
+
+## Advanced Capabilities
+1. **Check-in System**
+   - QR code scanning
+   - Attendance tracking
+
+2. **Notification System**
+   - Email notifications
+   - Push notifications
+
+3. **Analytics and Reporting**
+   - Event analytics
+   - Sales reports
+
+# Risks and Mitigations  
+## Technical Challenges
+1. **Microservice Complexity**
+   - **Risk**: Managing distributed services adds complexity to development and operations.
+   - **Mitigation**: Strong service boundaries, comprehensive API documentation, and centralized monitoring.
+
+2. **Data Consistency**
+   - **Risk**: Maintaining consistency across services during transactions (e.g., ticket purchases).
+   - **Mitigation**: Implement event-driven architecture with idempotent operations and transaction sagas.
+
+3. **Scalability Under Load**
+   - **Risk**: System performance during high-demand events (flash sales, popular events).
+   - **Mitigation**: Load testing, distributed caching, and auto-scaling configurations.
+
+## MVP Scope Management
+1. **Feature Creep**
+   - **Risk**: Adding too many features before establishing core functionality.
+   - **Mitigation**: Strict prioritization based on user value, regular scope reviews.
+
+2. **Technical Debt**
+   - **Risk**: Taking shortcuts to deliver MVP features that will require substantial rework later.
+   - **Mitigation**: Maintain code quality standards, plan for refactoring in subsequent phases.
+
+3. **User Adoption Barriers**
+   - **Risk**: Complex workflows that discourage user adoption.
+   - **Mitigation**: Focus on simplicity for core user flows, usability testing throughout development.
+
+## Resource Constraints
+1. **Development Bandwidth**
+   - **Risk**: Limited development resources to implement all desired features.
+   - **Mitigation**: Clear prioritization, modular development approach, potential use of third-party solutions.
+
+2. **Specialized Expertise**
+   - **Risk**: Need for specialized skills in areas like payment processing or security.
+   - **Mitigation**: Targeted training, partnership with specialized service providers, or strategic hiring.
+
+3. **Infrastructure Costs**
+   - **Risk**: Cloud infrastructure costs as the platform scales.
+   - **Mitigation**: Efficient resource usage, cost monitoring, and optimization of high-cost services.
+
+# Appendix  
+## Integration Points
+1. **Payment Gateways**
+   - Potential providers: Stripe, PayPal, local payment providers
+   - Requirements for integration: API access, security compliance
+
+2. **Email Service**
+   - Requirements: Templating, delivery tracking, bounce management
+   - Potential solutions: AWS SES, SendGrid
+
+3. **Authentication**
+   - AWS Cognito implementation details
+   - JWT token structure and validation
+
+## Performance Requirements
+1. **Response Time Targets**
+   - API requests: <200ms (95th percentile)
+   - Page loads: <2s
+   - Ticket purchases: <5s end-to-end
+
+2. **Concurrency Requirements**
+   - Support for 1000+ concurrent users during peak events
+   - Handle 100+ ticket purchases per minute
+
+3. **Availability Targets**
+   - 99.9% uptime for core services
+   - Graceful degradation under heavy load
+
+## Security Considerations
+1. **Data Protection**
+   - PII handling compliance (GDPR, CCPA)
+   - Payment data security (PCI DSS)
+
+2. **Authentication Security**
+   - Multi-factor authentication support
+   - Secure password policies
+
+3. **API Security**
+   - Rate limiting
+   - Request validation
+   - Authorization checks
+</PRD>

@@ -1,0 +1,161 @@
+<context>
+# Overview  
+The API Gateway is a critical component of the Gotik platform, serving as the single entry point for all client requests. Based on an evaluation of the current implementation against PRD requirements, this document outlines the Minimum Viable Product (MVP) enhancements needed to close the identified gaps, focusing on authorization, basic performance monitoring, and essential resilience features.
+
+# Core Features Gap Analysis
+1. **Existing API Gateway Capabilities**
+   - ✅ Routes client requests to appropriate microservices
+   - ✅ Implements client-side load balancing via Eureka
+   - ✅ Integrates with AWS Cognito for authentication
+   - ✅ Basic rate limiting and CORS configuration
+
+2. **Identified Gaps**
+   - ❌ Role-based authorization (exists but is commented out)
+   - ❌ Performance metrics collection for meeting SLA requirements
+   - ❌ Resilience patterns for high-load scenarios
+
+3. **MVP Enhancement Focus**
+   - Complete the authorization implementation
+   - Add essential performance monitoring
+   - Implement basic resilience patterns
+
+# User Impact  
+## Role-Based Access Requirements
+
+1. **Admin Users**
+   - Need proper authorization checks for administrative endpoints
+   - Must be restricted from accessing unauthorized resources
+   
+2. **Operator Users**
+   - Require access to venue operation endpoints
+   - Must have appropriate permissions for check-in functionality
+
+3. **Regular Users** 
+   - Need access to user-specific endpoints
+   - Must be prevented from accessing administrative functions
+</context>
+
+<PRD>
+# Technical Architecture  
+## MVP System Components Enhancement
+1. **Authorization System (P0)**
+   - Complete the existing AuthorizationGatewayFilter implementation
+   - Uncomment and implement role-based route configurations in GatewayConfig
+   - Apply the filter to all service routes with appropriate role requirements
+
+2. **Basic Performance Monitoring (P0)**
+   - Implement request timing metrics using basic Micrometer integration
+   - Configure simple latency and error rate metrics collection
+   - Set up basic health check endpoints with status information
+
+3. **Essential Resilience (P1)**
+   - Add request timeout configurations for all service routes
+   - Implement simple circuit breaker for critical services
+   - Create basic fallback responses for service unavailability
+
+## MVP Data Models
+1. **Authorization Model**
+   - Use existing role definitions (ADMIN, OPERATOR, USER)
+   - Define basic route-to-role mappings
+   - Implement JWT claim extraction for role information
+
+2. **Basic Metrics Model**
+   - Request counts and error rates
+   - Response time measurements
+   - Service availability status
+
+## MVP APIs and Integrations
+1. **Enhanced Security**
+   - Complete existing AWS Cognito integration
+   - Implement role-based authorization filters
+   - Apply appropriate security to all routes
+
+2. **Basic Monitoring**
+   - Configure Actuator endpoints for health checks
+   - Set up basic metrics endpoints
+   - Integrate with existing logging framework
+
+## MVP Infrastructure Requirements
+1. **In-Memory Caching**
+   - Implement basic token caching using existing facilities
+   - Configure reasonable cache timeouts
+   - Add cache invalidation on critical updates
+
+# Development Roadmap  
+## Phase 1: Critical Security (MVP)
+1. **Complete Authorization Implementation**
+   - Uncomment and fix the existing AuthorizationGatewayFilter
+   - Test with the three main roles (ADMIN, OPERATOR, USER)
+   - Apply to all existing routes
+
+2. **Basic Security Hardening**
+   - Audit current routes for security gaps
+   - Ensure consistent application of security filters
+   - Test and verify role-based access
+
+## Phase 2: Basic Operational Needs (MVP)
+1. **Essential Monitoring**
+   - Implement basic response time metrics
+   - Add error rate tracking
+   - Configure simple health check endpoints
+
+2. **Basic Resilience**
+   - Add timeout configurations
+   - Implement simple circuit breaker patterns
+   - Create basic fallback responses for critical services
+
+# Logical Dependency Chain
+## MVP Foundation
+1. **Authorization System**
+   - Complete AuthorizationGatewayFilter implementation
+   - Apply filter to all routes
+   - Test with different user roles
+
+2. **Basic Operational Visibility**
+   - Add basic request logging
+   - Implement health check endpoints
+   - Configure simple metrics collection
+
+3. **Minimal Resilience**
+   - Configure request timeouts
+   - Add circuit breaker for critical services
+   - Create simple fallback responses
+
+# Risks and Mitigations  
+## MVP Technical Considerations
+1. **Performance Impact**
+   - **Risk**: Added authorization checks could impact gateway performance
+   - **Mitigation**: Focus on efficient implementation and test under load
+
+2. **Service Compatibility**
+   - **Risk**: Authorization changes might affect existing services
+   - **Mitigation**: Test thoroughly with all microservices
+
+# MVP Acceptance Criteria
+1. **Authorization Implementation**
+   - AuthorizationGatewayFilter successfully validates JWT roles
+   - All routes have appropriate role restrictions
+   - Unauthorized requests are properly rejected
+   - Success: 100% of routes properly secured by role
+
+2. **Performance Monitoring**
+   - Basic metrics collection is functioning
+   - Response times are tracked
+   - Health endpoints provide accurate status
+   - Success: SLA metrics available for 95% of requests
+
+3. **Resilience Features**
+   - Timeouts prevent cascading failures
+   - Circuit breaker functions under test conditions
+   - Fallback responses are implemented for critical services
+   - Success: System degrades gracefully when services are unavailable
+
+# Future Considerations (Post-MVP)
+1. **Advanced Features for Later Phases**
+   - Distributed tracing
+   - Performance dashboards
+   - Advanced caching
+   - Developer sandbox environments
+   - API versioning
+   - Comprehensive documentation
+</PRD>
